@@ -28,7 +28,7 @@ jobs:
         with:
           context: ./server
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/mqtt-ss-api:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/ss-web-geo:latest
 
       - name: Build and push Frontend (React)
         uses: docker/build-push-action@v4
