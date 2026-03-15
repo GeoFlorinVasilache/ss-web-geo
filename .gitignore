@@ -1,0 +1,15 @@
+# Secrete și configurări locale
+.env
+.env.local
+.dev-runtime/
+
+# Dependințe (le instalăm în Docker/local, nu le urcăm)
+node_modules/
+dist/
+bin/
+
+# Fișiere specifice sistemului de operare sau IDE-ului
+.DS_Store
+.vscode/
+.idea/
+*.log
