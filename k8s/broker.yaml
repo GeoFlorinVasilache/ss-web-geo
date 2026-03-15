@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: broker-config
+data:
+  mosquitto.conf: |
+    listener 1883
+    allow_anonymous true
+    log_type all
+    log_type subscribe
+    log_type unsubscribe
+    log_type websockets
+    log_type error
+    log_type warning
+    log_type notice
+    log_type information
+    connection_messages true
+    log_timestamp true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker
+spec:
+  selector:
+    matchLabels:
+      app: broker
+  template:
+    metadata:
+      labels:
+        app: broker
+    spec:
+      containers:
+        - name: broker
+          image: eclipse-mosquitto:latest
+          ports:
+            - containerPort: 1883
+          volumeMounts:
+            - name: config-volume
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+      volumes:
+        - name: config-volume
+          configMap:
+            name: broker-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker
+spec:
+  selector:
+    app: broker
+  ports:
+    - port: 1883
+      targetPort: 1883

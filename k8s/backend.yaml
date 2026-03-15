@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-api
+spec:
+  selector:
+    matchLabels:
+      app: go-api
+  template:
+    metadata:
+      labels:
+        app: go-api
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: go-api
+          image: george5florin/ss-web-geo:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: app-env-secret
+          env:
+            - name: MQTT_HOST_IP
+              value: "broker" # În K8s, serviciile se găsesc direct după nume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-api
+spec:
+  type: LoadBalancer
+  selector:
+    app: go-api
+  ports:
+    - port: 8080
+      targetPort: 8080
